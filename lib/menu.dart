@@ -23,7 +23,7 @@ class _MenuPageState extends State<MenuPage> {
         elevation: 0.0,
         centerTitle: true,
         title: Text(
-          "KOTESU",
+          "KOTESUUU",
           style: TextStyle(fontSize: 20, color: Colors.black),
         ),
       ),
