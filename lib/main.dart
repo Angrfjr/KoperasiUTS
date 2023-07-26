@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:koperasi/Create.dart';
+import 'package:koperasi/menu.dart';
 import 'package:koperasi/page.dart';
 
 void main() {
@@ -10,7 +12,7 @@ class MyKoperasi extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomePage(),
     );

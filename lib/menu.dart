@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:koperasi/listalattulis.dart';
-import 'package:koperasi/listmakanan.dart';
-import 'package:koperasi/listminuman.dart';
-import 'package:koperasi/listsnack.dart';
+import 'package:koperasi/cart.dart';
+import 'package:koperasi/Alat/listalattulis.dart';
+import 'package:koperasi/Makanan/listmakanan.dart';
+import 'package:koperasi/Minuman/listminuman.dart';
+import 'package:koperasi/Snack/listsnack.dart';
 import 'package:koperasi/page.dart';
 
 class MenuPage extends StatefulWidget {
@@ -22,8 +23,18 @@ class _MenuPageState extends State<MenuPage> {
         backgroundColor: Colors.white,
         elevation: 0.0,
         centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.shopping_cart,
+              color: Color.fromARGB(255, 216, 49, 49)),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CartPage()),
+            );
+          },
+        ),
         title: Text(
-          "KOTESUUU",
+          "KOTESU",
           style: TextStyle(fontSize: 20, color: Colors.black),
         ),
       ),
@@ -55,6 +66,7 @@ class _MenuPageState extends State<MenuPage> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
             child: TextFormField(
+              style: TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 fillColor: Color.fromARGB(255, 155, 48, 48),
                 filled: true,

@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
           ),
           Spacer(),
           GestureDetector(
-            onTap: () => Navigator.push(
+            onTap: () => Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) {

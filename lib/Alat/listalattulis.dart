@@ -1,25 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:koperasi/Create.dart';
+import 'package:koperasi/cart.dart';
 import 'package:koperasi/menu.dart';
 
-class ListMakanan extends StatefulWidget {
-  const ListMakanan({super.key});
+class ListATK extends StatefulWidget {
+  const ListATK({super.key});
 
   @override
-  State<ListMakanan> createState() => _ListMakananState();
+  State<ListATK> createState() => _ListATKState();
 }
 
-class _ListMakananState extends State<ListMakanan> {
-  var titleList = ["Kebab", "Gorengan"];
+class _ListATKState extends State<ListATK> {
+  var titleList = ["Bulpen", "Stipo", "Penggaris"];
 
   // Description List Here
-  var descList = ["Rp 7.000", "Rp 2.000"];
+  var descList = ["Rp 5.000", "Rp 6.000", "Rp 8.000"];
 
   // Image Name List Here
-  var imgList = ["images/kebab.png", "images/gorengan.png"];
+  var imgList = [
+    "images/pulpen.png",
+    "images/stipo.png",
+    "images/penggaris.png"
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return CreateData();
+            },
+          ),
+        ),
+        backgroundColor: Color.fromARGB(255, 216, 49, 49),
+        child: Icon(Icons.create),
+      ),
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -29,7 +47,7 @@ class _ListMakananState extends State<ListMakanan> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Color.fromARGB(255, 216, 49, 49)),
           onPressed: () {
-            Navigator.push(
+            Navigator.pop(
               context,
               MaterialPageRoute(builder: (context) => MenuPage()),
             );
@@ -106,8 +124,8 @@ showDialogFunc(context, img, title, desc) {
               borderRadius: BorderRadius.circular(10),
               color: Colors.white,
             ),
-            padding: EdgeInsets.all(15),
-            height: 320,
+            padding: EdgeInsets.all(20),
+            height: 400,
             width: MediaQuery.of(context).size.width * 0.7,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -126,7 +144,7 @@ showDialogFunc(context, img, title, desc) {
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 35,
                     color: Colors.grey,
                     fontWeight: FontWeight.bold,
                   ),
@@ -141,8 +159,35 @@ showDialogFunc(context, img, title, desc) {
                     child: Text(
                       desc,
                       maxLines: 3,
-                      style: TextStyle(fontSize: 15, color: Colors.grey[500]),
+                      style: TextStyle(fontSize: 25, color: Colors.grey[500]),
                       textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  onTap: () => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const CartPage();
+                      },
+                    ),
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 182, 31, 31),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    padding: const EdgeInsets.all(15),
+                    child: const Text(
+                      "Add to Cart",
+                      style: TextStyle(
+                          color: Color.fromARGB(255, 255, 255, 255),
+                          fontSize: 20,
+                          fontStyle: FontStyle.italic),
                     ),
                   ),
                 ),
