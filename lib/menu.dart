@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:koperasi/cart.dart';
-import 'package:koperasi/Alat/listalattulis.dart';
+import 'package:koperasi/Alat/listatk.dart';
 import 'package:koperasi/Makanan/listmakanan.dart';
 import 'package:koperasi/Minuman/listminuman.dart';
 import 'package:koperasi/Snack/listsnack.dart';
@@ -63,27 +63,7 @@ class _MenuPageState extends State<MenuPage> {
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-            child: TextFormField(
-              style: TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                fillColor: Color.fromARGB(255, 155, 48, 48),
-                filled: true,
-                hintText: "Cari Disini",
-                hintStyle: TextStyle(color: Colors.white),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-          ),
+          SizedBox(height: 10),
           GridView.count(
             crossAxisCount: 2,
             shrinkWrap: true,
@@ -199,7 +179,7 @@ class _MenuPageState extends State<MenuPage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ListATK()),
+                    MaterialPageRoute(builder: (context) => const ListAtk()),
                   );
                 },
               ),

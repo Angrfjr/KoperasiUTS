@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:koperasi/Create.dart';
+import 'package:koperasi/Minuman/CreateMinuman.dart';
 import 'package:koperasi/cart.dart';
 import 'package:koperasi/menu.dart';
+import 'package:http/http.dart' as http;
 
 class ListMinuman extends StatefulWidget {
   const ListMinuman({super.key});
@@ -11,13 +14,74 @@ class ListMinuman extends StatefulWidget {
 }
 
 class _ListMinumanState extends State<ListMinuman> {
-  var titleList = ["Aqua", "Coca Cola", "Golda"];
+  final apiUrl = 'http://localhost:5000/minuman';
 
-  // Description List Here
-  var descList = ["Rp 3.500", "Rp 5.500", "Rp 3.500"];
+  List<dynamic> data = [];
+  bool isLoading = true;
 
-  // Image Name List Here
-  var imgList = ["images/aqua.png", "images/coca.png", "images/golda.png"];
+  final idController = TextEditingController();
+  final namaController = TextEditingController();
+  final hargaController = TextEditingController();
+  final imageController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    getMinuman();
+  }
+
+  Future<void> getMinuman() async {
+    setState(() {
+      isLoading = false;
+    });
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        setState(() {
+          data = json.decode(response.body);
+          isLoading = false;
+        });
+      } else {
+        throw Exception('Failed to fetch data');
+      }
+    } catch (error) {
+      throw Exception('Failed to connect to the server');
+    }
+  }
+
+  Future<void> updateData(String id) async {
+    final response = await http.patch(
+      Uri.parse('$apiUrl/$id'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'nama': namaController.text,
+        'harga': hargaController.text,
+        'image': imageController.text,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      getMinuman();
+      idController.clear();
+      namaController.clear();
+      hargaController.clear();
+      imageController.clear();
+    } else {
+      throw Exception('Failed to update data');
+    }
+  }
+
+  Future<void> deleteData(String id) async {
+    final response = await http.delete(Uri.parse('$apiUrl/$id'));
+
+    if (response.statusCode == 200) {
+      getMinuman();
+    } else {
+      throw Exception('Failed to delete data');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +91,12 @@ class _ListMinumanState extends State<ListMinuman> {
           context,
           MaterialPageRoute(
             builder: (context) {
-              return CreateData();
+              return CreateMinuman();
             },
           ),
         ),
         backgroundColor: Color.fromARGB(255, 216, 49, 49),
-        child: Icon(Icons.create),
+        child: Icon(Icons.add),
       ),
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
@@ -54,144 +118,164 @@ class _ListMinumanState extends State<ListMinuman> {
           style: TextStyle(fontSize: 20, color: Colors.black),
         ),
       ),
-      body: ListView.builder(
-        itemCount: imgList.length,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              showDialogFunc(
-                  context, imgList[index], titleList[index], descList[index]);
-            },
-            child: Card(
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    width: 100,
-                    height: 100,
-                    child: Image.asset(imgList[index]),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: data.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          titleList[index],
-                          style: const TextStyle(
-                            fontSize: 25,
-                            color: Colors.black87,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          width: 100,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(data[index]['nama']),
+                                  content: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Image.network(
+                                        data[index]['image'],
+                                        height: 150,
+                                        width: 150,
+                                        fit: BoxFit.contain,
+                                        scale: 1,
+                                      ),
+                                      SizedBox(height: 10),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CartPage()),
+                                          );
+                                        },
+                                        child: Text("Add to Cart"),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
                           child: Text(
-                            descList[index],
-                            maxLines: 3,
+                            data[index]['nama'],
                             style: TextStyle(
-                                fontSize: 15, color: Colors.grey[500]),
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.all(10),
+                            primary: Color.fromARGB(255, 216, 49, 49),
+                          ),
+                        ),
+                        SizedBox(
+                            height:
+                                5), // Optional: Add some spacing between the button and subtitle
+                        Text(
+                          '\Rp.${data[index]['harga']}',
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Color.fromARGB(255, 82, 82, 82)),
                         ),
                       ],
                     ),
-                  )
-                ],
-              ),
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        color: Colors.green,
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Update Data'),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    TextField(
+                                      controller: namaController,
+                                      decoration: InputDecoration(
+                                        labelText: 'Nama',
+                                      ),
+                                    ),
+                                    TextField(
+                                      controller: hargaController,
+                                      decoration: InputDecoration(
+                                        labelText: 'Harga',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                actions: [
+                                  TextButton(
+                                    child: Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: Text('Update'),
+                                    onPressed: () {
+                                      updateData(data[index]['id'].toString());
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      ),
+                      SizedBox(width: 25),
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        color: Colors.red,
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text('Delete Data'),
+                                content: Text(
+                                    'Are you sure you want to delete this data?'),
+                                actions: [
+                                  TextButton(
+                                    child: Text('Cancel'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: Text('Delete'),
+                                    onPressed: () {
+                                      deleteData(data[index]['id'].toString());
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
-}
-
-showDialogFunc(context, img, title, desc) {
-  return showDialog(
-    context: context,
-    builder: (context) {
-      return Center(
-        child: Material(
-          type: MaterialType.transparency,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-            ),
-            padding: EdgeInsets.all(20),
-            height: 400,
-            width: MediaQuery.of(context).size.width * 0.7,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: Image.asset(
-                    img,
-                    width: 200,
-                    height: 200,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 35,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  // width: 200,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      desc,
-                      maxLines: 3,
-                      style: TextStyle(fontSize: 25, color: Colors.grey[500]),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                GestureDetector(
-                  onTap: () => Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const CartPage();
-                      },
-                    ),
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 182, 31, 31),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    padding: const EdgeInsets.all(15),
-                    child: const Text(
-                      "Add to Cart",
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          fontSize: 20,
-                          fontStyle: FontStyle.italic),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    },
-  );
 }

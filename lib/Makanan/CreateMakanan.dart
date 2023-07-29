@@ -15,21 +15,21 @@ class CreateData extends StatefulWidget {
 }
 
 class _CreateDataState extends State<CreateData> {
-  final apiUrl = 'http://localhost:5000/users';
+  final apiUrl = 'http://localhost:5000/makanan';
 
   List<dynamic> data = [];
   bool isLoading = true;
 
-  TextEditingController namaController = TextEditingController();
-  TextEditingController hargaController = TextEditingController();
-  TextEditingController imageController = TextEditingController();
+  final namaController = TextEditingController();
+  final hargaController = TextEditingController();
+  final imageController = TextEditingController();
 
   void initState() {
     super.initState();
-    getData();
+    getMakanan();
   }
 
-  Future<void> getData() async {
+  Future<void> getMakanan() async {
     setState(() {
       isLoading = true;
     });
@@ -62,7 +62,7 @@ class _CreateDataState extends State<CreateData> {
     );
 
     if (response.statusCode == 201) {
-      getData();
+      getMakanan();
       namaController.clear();
       imageController.clear();
       hargaController.clear();
@@ -98,23 +98,22 @@ class _CreateDataState extends State<CreateData> {
         padding: EdgeInsets.all(20),
         child: Column(children: [
           TextField(
-            decoration: InputDecoration(
-                border: OutlineInputBorder(), hintText: 'Masukkan Nama Barang'),
             controller: namaController,
-          ),
-          SizedBox(height: 10),
-          TextField(
             decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Masukkan Harga Barang'),
+              labelText: 'Nama',
+            ),
+          ),
+          TextField(
             controller: hargaController,
-          ),
-          SizedBox(height: 10),
-          TextField(
             decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Masukkan Link Foto Barang'),
+              labelText: 'Harga',
+            ),
+          ),
+          TextField(
             controller: imageController,
+            decoration: InputDecoration(
+              labelText: 'Link Image',
+            ),
           ),
           SizedBox(height: 10),
           ElevatedButton(
@@ -123,7 +122,7 @@ class _CreateDataState extends State<CreateData> {
             },
             child: Text(
               'Create',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,

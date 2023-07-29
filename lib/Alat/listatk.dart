@@ -1,20 +1,20 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:koperasi/Makanan/CreateMakanan.dart';
+import 'package:koperasi/Alat/CreateAlat.dart';
 import 'package:koperasi/cart.dart';
 import 'package:koperasi/menu.dart';
 import 'package:http/http.dart' as http;
 
-class ListMakanan extends StatefulWidget {
-  const ListMakanan({super.key});
+class ListAtk extends StatefulWidget {
+  const ListAtk({super.key});
 
   @override
-  State<ListMakanan> createState() => _ListMakananState();
+  State<ListAtk> createState() => _ListAtkState();
 }
 
-class _ListMakananState extends State<ListMakanan> {
-  final apiUrl = 'http://localhost:5000/makanan';
+class _ListAtkState extends State<ListAtk> {
+  final apiUrl = 'http://localhost:5000/atk';
 
   List<dynamic> data = [];
   bool isLoading = true;
@@ -27,10 +27,10 @@ class _ListMakananState extends State<ListMakanan> {
   @override
   void initState() {
     super.initState();
-    getMakanan();
+    getAtk();
   }
 
-  Future<void> getMakanan() async {
+  Future<void> getAtk() async {
     setState(() {
       isLoading = false;
     });
@@ -63,7 +63,7 @@ class _ListMakananState extends State<ListMakanan> {
     );
 
     if (response.statusCode == 200) {
-      getMakanan();
+      getAtk();
       idController.clear();
       namaController.clear();
       hargaController.clear();
@@ -77,7 +77,7 @@ class _ListMakananState extends State<ListMakanan> {
     final response = await http.delete(Uri.parse('$apiUrl/$id'));
 
     if (response.statusCode == 200) {
-      getMakanan();
+      getAtk();
     } else {
       throw Exception('Failed to delete data');
     }
@@ -91,7 +91,7 @@ class _ListMakananState extends State<ListMakanan> {
           context,
           MaterialPageRoute(
             builder: (context) {
-              return CreateData();
+              return CreateAlat();
             },
           ),
         ),
@@ -215,12 +215,6 @@ class _ListMakananState extends State<ListMakanan> {
                                       controller: hargaController,
                                       decoration: InputDecoration(
                                         labelText: 'Harga',
-                                      ),
-                                    ),
-                                    TextField(
-                                      controller: imageController,
-                                      decoration: InputDecoration(
-                                        labelText: 'Image',
                                       ),
                                     ),
                                   ],

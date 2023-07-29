@@ -1,77 +1,61 @@
-GridView.count(
-            crossAxisCount: 2,
-            shrinkWrap: true,
-            childAspectRatio: 0.80,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-                margin: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  boxShadow: [
-                    BoxShadow(
-                      color:
-                          Color.fromARGB(255, 163, 163, 163).withOpacity(0.4),
-                      spreadRadius: 1,
-                      blurRadius: 8,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, "SingleItemPage");
-                      },
-                      child: Container(
-                        margin: EdgeInsets.all(10),
-                        child: Image.asset(
-                          imgList[index],
-                          height: 150,
-                          width: 150,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 8),
-                      child: Container(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Roti Aoka",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 99, 99, 99),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Coklat, Vanilla, Blueberry",
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Color.fromARGB(255, 99, 99, 99),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Rp. 3000",
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Color.fromARGB(255, 216, 49, 49)),
+          onPressed: () {
+            Navigator.pop(
+              context,
+              MaterialPageRoute(builder: (context) => ListMakanan()),
+            );
+          },
+        ),
+        title: Text(
+          "KOTESU",
+          style: TextStyle(fontSize: 20, color: Colors.black),
+        ),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(20),
+        child: Column(children: [
+          TextField(
+            decoration: InputDecoration(
+                border: OutlineInputBorder(), hintText: 'Masukkan Nama Barang'),
+            controller: namaController,
           ),
+          SizedBox(height: 10),
+          TextField(
+            decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Masukkan Harga Barang'),
+            controller: hargaController,
+          ),
+          SizedBox(height: 10),
+          TextField(
+            decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Masukkan Link Foto Barang'),
+            controller: imageController,
+          ),
+          SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () {
+              addData();
+            },
+            child: Text(
+              'Create',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
+}
