@@ -7,14 +7,14 @@ import 'package:koperasi/Makanan/listmakanan.dart';
 import 'package:koperasi/menu.dart';
 import 'package:http/http.dart' as http;
 
-class CreateData extends StatefulWidget {
-  const CreateData({super.key});
+class CreateMakanan extends StatefulWidget {
+  const CreateMakanan({super.key});
 
   @override
-  State<CreateData> createState() => _CreateDataState();
+  State<CreateMakanan> createState() => _CreateMakananState();
 }
 
-class _CreateDataState extends State<CreateData> {
+class _CreateMakananState extends State<CreateMakanan> {
   final apiUrl = 'http://localhost:5000/makanan';
 
   List<dynamic> data = [];
@@ -119,6 +119,7 @@ class _CreateDataState extends State<CreateData> {
           ElevatedButton(
             onPressed: () {
               addData();
+              Navigator.of(context).pop();
             },
             child: Text(
               'Create',

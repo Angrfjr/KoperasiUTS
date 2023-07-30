@@ -59,3 +59,12 @@ return Scaffold(
     );
   }
 }
+
+
+Image.network(
+                                        data[index]['image'],
+                                        height: 150,
+                                        width: 150,
+                                        fit: BoxFit.contain,
+                                        scale: 1,
+                                      ),

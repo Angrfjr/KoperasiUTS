@@ -119,6 +119,7 @@ class _CreateSnackState extends State<CreateSnack> {
           ElevatedButton(
             onPressed: () {
               addData();
+              Navigator.of(context).pop();
             },
             child: Text(
               'Create',

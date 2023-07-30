@@ -119,6 +119,7 @@ class _CreateMinumanState extends State<CreateMinuman> {
           ElevatedButton(
             onPressed: () {
               addData();
+              Navigator.of(context).pop();
             },
             child: Text(
               'Create',

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:koperasi/Minuman/CreateMinuman.dart';
-import 'package:koperasi/cart.dart';
 import 'package:koperasi/menu.dart';
 import 'package:http/http.dart' as http;
 
@@ -120,161 +119,152 @@ class _ListMinumanState extends State<ListMinuman> {
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+          : Container(
+              child: ListView.builder(
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Image.network(
+                              data[index]['image'],
+                              height: 150,
+                              width: 150,
+                              fit: BoxFit.contain,
+                              scale: 1,
+                              errorBuilder: (BuildContext context,
+                                  Object exception, StackTrace? stackTrace) {
+                                return Text("Failed to load image");
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  data[index]['nama'],
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 216, 49, 49),
+                                  ),
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  '\Rp.${data[index]['harga']}',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Color.fromARGB(255, 82, 82, 82),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    trailing: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        TextButton(
+                        IconButton(
+                          icon: Icon(Icons.edit),
+                          color: Colors.green,
                           onPressed: () {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text(data[index]['nama']),
+                                  title: Text('Update Data'),
                                   content: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Image.network(
-                                        data[index]['image'],
-                                        height: 150,
-                                        width: 150,
-                                        fit: BoxFit.contain,
-                                        scale: 1,
+                                      TextField(
+                                        controller: namaController,
+                                        decoration: InputDecoration(
+                                          labelText: 'Nama',
+                                        ),
                                       ),
-                                      SizedBox(height: 10),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CartPage()),
-                                          );
-                                        },
-                                        child: Text("Add to Cart"),
+                                      TextField(
+                                        controller: hargaController,
+                                        decoration: InputDecoration(
+                                          labelText: 'Harga',
+                                        ),
+                                      ),
+                                      TextField(
+                                        controller: imageController,
+                                        decoration: InputDecoration(
+                                          labelText: 'Image',
+                                        ),
                                       ),
                                     ],
                                   ),
+                                  actions: [
+                                    TextButton(
+                                      child: Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: Text('Update'),
+                                      onPressed: () {
+                                        updateData(
+                                            data[index]['id'].toString());
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
                                 );
                               },
                             );
                           },
-                          child: Text(
-                            data[index]['nama'],
-                            style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.all(10),
-                            primary: Color.fromARGB(255, 216, 49, 49),
-                          ),
                         ),
-                        SizedBox(
-                            height:
-                                5), // Optional: Add some spacing between the button and subtitle
-                        Text(
-                          '\Rp.${data[index]['harga']}',
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: Color.fromARGB(255, 82, 82, 82)),
+                        SizedBox(width: 25),
+                        IconButton(
+                          icon: Icon(Icons.delete),
+                          color: Colors.red,
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Delete Data'),
+                                  content: Text(
+                                      'Are you sure you want to delete this data?'),
+                                  actions: [
+                                    TextButton(
+                                      child: Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: Text('Delete'),
+                                      onPressed: () {
+                                        deleteData(
+                                            data[index]['id'].toString());
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
                         ),
                       ],
                     ),
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.edit),
-                        color: Colors.green,
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Update Data'),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextField(
-                                      controller: namaController,
-                                      decoration: InputDecoration(
-                                        labelText: 'Nama',
-                                      ),
-                                    ),
-                                    TextField(
-                                      controller: hargaController,
-                                      decoration: InputDecoration(
-                                        labelText: 'Harga',
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  TextButton(
-                                    child: Text('Cancel'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  TextButton(
-                                    child: Text('Update'),
-                                    onPressed: () {
-                                      updateData(data[index]['id'].toString());
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      ),
-                      SizedBox(width: 25),
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        color: Colors.red,
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text('Delete Data'),
-                                content: Text(
-                                    'Are you sure you want to delete this data?'),
-                                actions: [
-                                  TextButton(
-                                    child: Text('Cancel'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  TextButton(
-                                    child: Text('Delete'),
-                                    onPressed: () {
-                                      deleteData(data[index]['id'].toString());
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
     );
   }

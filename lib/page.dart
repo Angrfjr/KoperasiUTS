@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:koperasi/menu.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,59 +15,58 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 80, right: 80, bottom: 20, top: 50),
-            child: Image.asset('images/Koperasi.png'),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(24),
-            child: Text(
-              "Beli Barang Gaperlu Antri",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 40,
-                color: Colors.red,
-                fontWeight: FontWeight.bold,
-              ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'images/Koperasi.png',
+              width: 500,
+              height: 500,
             ),
-          ),
-          const Text(
-            "Menyediakan segala kebutuhan untuk Mahasiswa",
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.grey,
-            ),
-          ),
-          Spacer(),
-          GestureDetector(
-            onTap: () => Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return const MenuPage();
-                },
-              ),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 182, 31, 31),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              padding: const EdgeInsets.all(24),
-              child: const Text(
-                "Belanja Sekarang",
+            SizedBox(height: 10),
+            Center(
+              child: Text(
+                'Membantu Menyediakan Apapun',
                 style: TextStyle(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    fontSize: 30,
-                    fontStyle: FontStyle.italic),
+                    fontSize: 27,
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold),
               ),
             ),
-          ),
-          Spacer(),
-        ],
+            Center(
+              child: Text(
+                'Yang Anda Cari',
+                style: TextStyle(
+                    fontSize: 27,
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(height: 25),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MenuPage(),
+                  ),
+                );
+              },
+              child: Text(
+                'Mulai Belanja',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 255, 255, 255)),
+              ),
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(200, 60),
+                primary: Color.fromARGB(255, 194, 60, 60),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

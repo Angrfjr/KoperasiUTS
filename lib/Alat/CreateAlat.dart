@@ -119,6 +119,7 @@ class _CreateAlatState extends State<CreateAlat> {
           ElevatedButton(
             onPressed: () {
               addData();
+              Navigator.of(context).pop();
             },
             child: Text(
               'Create',
